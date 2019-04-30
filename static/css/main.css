@@ -1,0 +1,11 @@
+body{ background-color: ivory; padding:20px; }
+        #canvas{border:1px solid red;}
+        .container {
+            position: relative;
+        }
+
+        #canvass canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }

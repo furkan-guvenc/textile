@@ -1,0 +1,187 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body %}
+
+<img src="{% static 'images/pattern/desen1.jpg' %}" id="desen" class="pattern" width="50">
+<img src="{% static 'images/pattern/desen2.jpg' %}" id="desen1" class="pattern" width="50">
+<img src="{% static 'images/pattern/desen001.jpg' %}" id="desen001" class="pattern" width="50">
+<img src="{% static 'images/pattern/desen002.jpg' %}" id="desen002" class="pattern" width="50">
+<img src="{% static 'images/pattern/desen003.jpg' %}" id="desen003" class="pattern" width="50">
+<img src="{% static 'images/pattern/desen004.jpg' %}" id="desen004" class="pattern" width="50">
+<img src="{% static 'images/pattern/desen005.jpg' %}" id="desen005" class="pattern" width="50">
+<img src="{% static 'images/pattern/desen006.jpg' %}" id="desen006" class="pattern" width="50">
+<img src="{% static 'images/pattern/desen007.jpg' %}" id="desen007" class="pattern" width="50">
+<img src="{% static 'images/pattern/desen008.jpg' %}" id="desen008" class="pattern" width="50">
+<img src="{% static 'images/pattern/desen009.jpg' %}" id="desen009" class="pattern" width="50">
+{#<img src="{% static 'images/uzunkol/hamyaka.tif' %}" id="desen009" class="pattern" width="50">#}
+
+<div id="container" class="container">
+    <div class="row">
+        <div class="col-md-6" id="canvass">
+            <canvas id="czemin" width=500 height=600></canvas>
+            <canvas id="cbeden" width=500 height=600></canvas>
+            <canvas id="caltmanset" width=500 height=600></canvas>
+            <canvas id="custmanset" width=500 height=600></canvas>
+            <canvas id="conpat" width=500 height=600></canvas>
+            <canvas id="csagyaka" width=500 height=600></canvas>
+            <canvas id="csolyaka" width=500 height=600></canvas>
+            <canvas id="cgolge" width=500 height=600></canvas>
+
+{#            <canvas id="czemin" width=500 height=595></canvas>#}
+{#            <canvas id="cbeden" width=1181 height=1406></canvas>#}
+{#            <canvas id="caltmanset" width=1181 height=1406></canvas>#}
+{#            <canvas id="custmanset" width=1181 height=1406></canvas>#}
+{#            <canvas id="conpat" width=1181 height=1406></canvas>#}
+{#            <canvas id="csagyaka" width=1181 height=1406></canvas>#}
+{#            <canvas id="csolyaka" width=1181 height=1406></canvas>#}
+{#            <canvas id="cgolge" width=1181 height=1406></canvas>#}
+            <svg id="svg1" style="display:none"></svg>
+        </div>
+        <div class="col-md-6">
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block javascript %}
+<script>
+$(function(){
+        {#var sagbeden,solbeden,beden,kollar,yaka,dugmeler,ense;#}
+        var arka,golge,beden,altmanset,ustmanset,onpat,sagyaka,solyaka;
+
+        var image = document.getElementById('desen');
+        var svg1 = document.getElementById('svg1');
+        var matrix = svg1.createSVGMatrix();
+
+        var czemin = document.getElementById("czemin");
+        var ctxzemin = czemin.getContext("2d");
+        var cbeden = document.getElementById("cbeden");
+        var ctxbeden = cbeden.getContext("2d");
+        var caltmanset = document.getElementById("caltmanset");
+        var ctxaltmanset = caltmanset.getContext("2d");
+        var custmanset = document.getElementById("custmanset");
+        var ctxustmanset = custmanset.getContext("2d");
+        var conpat = document.getElementById("conpat");
+        var ctxonpat = conpat.getContext("2d");
+        var csagyaka = document.getElementById("csagyaka");
+        var ctxsagyaka = csagyaka.getContext("2d");
+        var csolyaka = document.getElementById("csolyaka");
+        var ctxsolyaka = csolyaka.getContext("2d");
+        var cgolge = document.getElementById("cgolge");
+        var ctxgolge = cgolge.getContext("2d");
+
+        var imageURLs=[];
+        var imagesOK=0;
+        var imgs=[];
+        imageURLs.push("{% static 'images/gomlek/00-arka-bos-new.png' %}");
+        imageURLs.push("{% static 'images/gomlek/01-golge-bos.png' %}");
+        imageURLs.push("{% static 'images/gomlek/02-beden-bos.png' %}");
+        imageURLs.push("{% static 'images/gomlek/03-alt-manset-bos.png' %}");
+        imageURLs.push("{% static 'images/gomlek/04-ust-manset-bos.png' %}");
+        imageURLs.push("{% static 'images/gomlek/05-on-pat-bos.png' %}");
+        imageURLs.push("{% static 'images/gomlek/06-sag-yaka-bos.png' %}");
+        imageURLs.push("{% static 'images/gomlek/07-sol-yaka-bos.png' %}");
+
+        {#imageURLs.push("{% static 'images/uzunkol/beden3.png' %}");#}
+        {#imageURLs.push("{% static 'images/uzunkol/sagbeden2.png' %}");#}
+        {#imageURLs.push("{% static 'images/uzunkol/solbeden3.png' %}");#}
+        {#imageURLs.push("{% static 'images/uzunkol/kollar.jpeg' %}");#}
+        {#imageURLs.push("{% static 'images/uzunkol/yaka.jpeg' %}");#}
+        {#imageURLs.push("{% static 'images/uzunkol/dugmeler.jpeg' %}");#}
+        {#imageURLs.push("{% static 'images/uzunkol/ense3.png' %}");#}
+        loadAllImages();
+
+        function loadAllImages(){
+            for (var i = 0; i < imageURLs.length; i++) {
+                var img = new Image();
+                imgs.push(img);
+                img.onload = function(){ imagesOK++; imagesAllLoaded(); };
+                img.src = imageURLs[i];
+            }
+        }
+
+        var imagesAllLoaded = function() {
+            if (imagesOK===imageURLs.length ) {
+                // all images are fully loaded and ready to use
+                arka=imgs[0];
+                golge=imgs[1];
+                beden=imgs[2];
+                altmanset=imgs[3];
+                ustmanset=imgs[4];
+                onpat=imgs[5];
+                sagyaka=imgs[6];
+                solyaka=imgs[7];
+
+                {#beden=imgs[0];#}
+                {#sagbeden=imgs[1];#}
+                {#solbeden=imgs[2];#}
+                {#kollar=imgs[3];#}
+                {#yaka=imgs[4];#}
+                {#dugmeler=imgs[5];#}
+                {#ense=imgs[6];#}
+                start();
+            }
+        };
+
+        function start(){
+            // zemin
+            ctxzemin.clearRect(0, 0, czemin.width, czemin.height);
+            ctxzemin.save();
+            ctxzemin.drawImage(arka, 0, 0);
+            ctxzemin.restore();
+
+            drawRotated(ctxbeden, 0, beden, image, czemin.width, czemin.height); // beden
+            drawRotated(ctxaltmanset, 0, altmanset, image, czemin.width, czemin.height); // alt manşet
+            {#drawRotated(ctxustmanset, 90, ustmanset, image, czemin.width, czemin.height); // üst manşet#}
+            {#drawPat(ctxonpat, 0, onpat, image, czemin.width, czemin.height); // ön pat#}
+            {#drawRotated(ctxsagyaka, 45, sagyaka, image, czemin.width, czemin.height, -10, 10); // sağ yaka#}
+            {#drawRotated(ctxsolyaka, -45, solyaka, image, czemin.width, czemin.height); // sol yaka#}
+            {##}
+            // golge
+            {#ctxgolge.clearRect(0, 0, czemin.width, czemin.height);#}
+            {#ctxgolge.save();#}
+            {#ctxgolge.drawImage(golge, -1, 2);#}
+            {#ctxgolge.restore();#}
+        }
+
+        function drawRotated(ctx, degrees, maske, img, width, height, transformx = 0, transformy = 0){
+            ctx.clearRect(0, 0, width, height);
+            ctx.save();
+
+            ctx.drawImage(maske, 0, 0);
+            ctx.setTransform(1, 0, 0, 1, transformx, transformy);
+            ctx.globalCompositeOperation="source-in";
+            var pattern = ctx.createPattern(img, "repeat");
+            pattern.setTransform(matrix.rotate(degrees).scale(1));
+            ctx.fillStyle = pattern;
+            ctx.fillRect(0, 0, width, height);
+            ctx.restore();
+        }
+
+        function drawPat(ctx, degrees, maske, img, width, height){
+            ctx.clearRect(0, 0, width, height);
+            ctx.save();
+
+            ctx.drawImage(maske, 0,0);
+            ctx.setTransform(1,0,0,1,10,-10);
+            ctx.globalCompositeOperation="source-in";
+            //pattern.setTransform(matrix.rotate(degrees).scale(1));
+            ctx.fillStyle = ctx.createPattern(img, "repeat");
+            ctx.fillRect(30, 30, width-30, height+10);
+            ctx.restore();
+        }
+
+        $(".pattern").click(function(){
+            //alert(this.id);
+            image = document.getElementById(this.id);
+
+            start();
+        });
+
+
+    });
+</script>
+{% endblock %}

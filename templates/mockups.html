@@ -1,0 +1,265 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body %}
+
+<img src="{% static 'images/desen1.jpg' %}" style="display: none" id="desen" class="pattern" width="50">
+{#<img src="{% static 'images/pattern/desen2.jpg' %}" id="desen1" class="pattern" width="50">#}
+{#<img src="{% static 'images/pattern/desen001.jpg' %}" id="desen001" class="pattern" width="50">#}
+{#<img src="{% static 'images/pattern/desen002.jpg' %}" id="desen002" class="pattern" width="50">#}
+{#<img src="{% static 'images/pattern/desen003.jpg' %}" id="desen003" class="pattern" width="50">#}
+{#<img src="{% static 'images/pattern/desen004.jpg' %}" id="desen004" class="pattern" width="50">#}
+{#<img src="{% static 'images/pattern/desen005.jpg' %}" id="desen005" class="pattern" width="50">#}
+{#<img src="{% static 'images/pattern/desen006.jpg' %}" id="desen006" class="pattern" width="50">#}
+{#<img src="{% static 'images/pattern/desen007.jpg' %}" id="desen007" class="pattern" width="50">#}
+{#<img src="{% static 'images/pattern/desen008.jpg' %}" id="desen008" class="pattern" width="50">#}
+{#<img src="{% static 'images/pattern/desen009.jpg' %}" id="desen009" class="pattern" width="50">#}
+{#<img src="{% static 'images/uzunkol/hamyaka.tif' %}" id="desen009" class="pattern" width="50">#}
+
+<div id="container" class="container">
+    <div class="row">
+        <div class="col-md-9" id="canvass">
+{#            <canvas id="czemin" width=500 height=600></canvas>#}
+{#            <canvas id="cbeden" width=500 height=600></canvas>#}
+{#            <canvas id="caltmanset" width=500 height=600></canvas>#}
+{#            <canvas id="custmanset" width=500 height=600></canvas>#}
+{#            <canvas id="conpat" width=500 height=600></canvas>#}
+{#            <canvas id="csagyaka" width=500 height=600></canvas>#}
+{#            <canvas id="csolyaka" width=500 height=600></canvas>#}
+{#            <canvas id="cgolge" width=500 height=600></canvas>#}
+
+            <canvas id="czemin" width=500 height=595></canvas>
+            <canvas id="cbeden" width=500 height=595></canvas>
+            <canvas id="caltmanset" width=500 height=595></canvas>
+            <canvas id="custmanset" width=500 height=595></canvas>
+            <canvas id="conpat" width=500 height=595></canvas>
+            <canvas id="csagyaka" width=500 height=595></canvas>
+            <canvas id="csolyaka" width=500 height=595></canvas>
+            <canvas id="cgolge" width=500 height=595></canvas>
+            <canvas id="csolbilek" width=500 height=595></canvas>
+            <canvas id="csagbilek" width=500 height=595></canvas>
+            <svg id="svg1" style="display:none"></svg>
+        </div>
+        <div class="col-md-3" >
+          <div class="row">
+              <h4 class="d-flex justify-content-between align-items-center">
+            <span class="text-muted">Desenler</span>
+            <span class="badge badge-secondary badge-pill" id="yenile">Yenile</span>
+          </h4>
+          <div style="overflow-y: scroll; overflow-x: hidden; height: 500px;">
+                <ul class="list-group mb-5" data-images-url="{% url 'load_images' %}" delete-image-url="{% url 'delete_image' %}" id="images_list">
+                </ul>
+          </div>
+          </div>
+            <div class="row">
+                <form method="post" enctype="multipart/form-data" action="{% url 'upload_pattern' %}">
+                    {% csrf_token %}
+                    <input type="file" name="myfile">
+                    <button type="submit">Upload</button>
+                </form>
+            </div>
+    </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block javascript %}
+<script>
+$(function(){
+        var sagbeden,solbeden,beden,kollar,yaka,dugmeler,ense,solbilek,sagbilek,golge;
+        {#var arka,golge,beden,altmanset,ustmanset,onpat,sagyaka,solyaka;#}
+
+        var image = document.getElementById('desen');
+        var svg1 = document.getElementById('svg1');
+        var matrix = svg1.createSVGMatrix();
+
+        var czemin = document.getElementById("czemin");
+        var ctxzemin = czemin.getContext("2d");
+        var cbeden = document.getElementById("cbeden");
+        var ctxbeden = cbeden.getContext("2d");
+        var caltmanset = document.getElementById("caltmanset");
+        var ctxaltmanset = caltmanset.getContext("2d");
+        var custmanset = document.getElementById("custmanset");
+        var ctxustmanset = custmanset.getContext("2d");
+        var conpat = document.getElementById("conpat");
+        var ctxonpat = conpat.getContext("2d");
+        var csagyaka = document.getElementById("csagyaka");
+        var ctxsagyaka = csagyaka.getContext("2d");
+        var csolyaka = document.getElementById("csolyaka");
+        var ctxsolyaka = csolyaka.getContext("2d");
+        var csolbilek = document.getElementById("csolbilek");
+        var ctxsolbilek = csolyaka.getContext("2d");
+        var csagbilek = document.getElementById("csagbilek");
+        var ctxsagbilek = csolyaka.getContext("2d");
+        var cgolge = document.getElementById("cgolge");
+        var ctxgolge = cgolge.getContext("2d");
+
+        var imageURLs=[];
+        var imagesOK=0;
+        var imgs=[];
+        {#imageURLs.push("{% static 'images/gomlek/00-arka-bos-new.png' %}");#}
+        {#imageURLs.push("{% static 'images/gomlek/01-golge-bos.png' %}");#}
+        {#imageURLs.push("{% static 'images/gomlek/02-beden-bos.png' %}");#}
+        {#imageURLs.push("{% static 'images/gomlek/03-alt-manset-bos.png' %}");#}
+        {#imageURLs.push("{% static 'images/gomlek/04-ust-manset-bos.png' %}");#}
+        {#imageURLs.push("{% static 'images/gomlek/05-on-pat-bos.png' %}");#}
+        {#imageURLs.push("{% static 'images/gomlek/06-sag-yaka-bos.png' %}");#}
+        {#imageURLs.push("{% static 'images/gomlek/07-sol-yaka-bos.png' %}");#}
+
+        imageURLs.push("{% static 'images/uzunkol/beden3.png' %}");
+        imageURLs.push("{% static 'images/uzunkol/sagbeden2.png' %}");
+        imageURLs.push("{% static 'images/uzunkol/solbeden3.png' %}");
+        imageURLs.push("{% static 'images/uzunkol/kollar.jpeg' %}");
+        imageURLs.push("{% static 'images/uzunkol/yaka3.png' %}");
+        imageURLs.push("{% static 'images/uzunkol/dugmeler3.png' %}");
+        imageURLs.push("{% static 'images/uzunkol/ense3.png' %}");
+        imageURLs.push("{% static 'images/uzunkol/solbilek3.png' %}");
+        imageURLs.push("{% static 'images/uzunkol/sagbilek3.png' %}");
+        imageURLs.push("{% static 'images/uzunkol/golge.png' %}");
+        loadAllImages();
+
+        function loadAllImages(){
+            for (var i = 0; i < imageURLs.length; i++) {
+                var img = new Image();
+                imgs.push(img);
+                img.onload = function(){ imagesOK++; imagesAllLoaded(); };
+                img.src = imageURLs[i];
+            }
+        }
+
+        var imagesAllLoaded = function() {
+            if (imagesOK===imageURLs.length ) {
+                // all images are fully loaded and ready to use
+                {#arka=imgs[0];#}
+                {#golge=imgs[1];#}
+                {#beden=imgs[2];#}
+                {#altmanset=imgs[3];#}
+                {#ustmanset=imgs[4];#}
+                {#onpat=imgs[5];#}
+                {#sagyaka=imgs[6];#}
+                {#solyaka=imgs[7];#}
+
+                beden=imgs[0];
+                solbeden=imgs[1];
+                sagbeden=imgs[2];
+                kollar=imgs[3];
+                yaka=imgs[4];
+                dugmeler=imgs[5];
+                ense=imgs[6];
+                solbilek=imgs[7];
+                sagbilek=imgs[8];
+                golge=imgs[9];
+                start();
+            }
+        };
+
+        function start(){
+            // zemin
+            {#ctxzemin.clearRect(0, 0, czemin.width, czemin.height);#}
+            {#ctxzemin.save();#}
+            {#ctxzemin.drawImage(solbeden, 0, 0);#}
+            {#ctxzemin.restore();#}
+
+            drawRotated(ctxbeden, 0, beden, image, czemin.width, czemin.height); // beden
+            drawRotated(ctxsagyaka, 90, ense, image, czemin.width, czemin.height); // beden
+            drawRotated(ctxsolyaka, 180, yaka, image, czemin.width, czemin.height); // beden
+            {#drawRotated(ctxaltmanset, 90, altmanset, image, czemin.width, czemin.height); // alt manşet#}
+            {#drawRotated(ctxustmanset, 90, ustmanset, image, czemin.width, czemin.height); // üst manşet#}
+            {#drawPat(ctxonpat, 0, onpat, image, czemin.width, czemin.height); // ön pat#}
+            {#drawRotated(ctxsagyaka, 45, sagyaka, image, czemin.width, czemin.height, -10, 10); // sağ yaka#}
+            {#drawRotated(ctxsolyaka, -45, solyaka, image, czemin.width, czemin.height); // sol yaka#}
+            drawRotated(ctxsolbilek, -45, solbilek, image, czemin.width, czemin.height);
+            drawRotated(ctxsagbilek, 45, sagbilek, image, czemin.width, czemin.height);
+            drawRotated(ctxaltmanset, 180, dugmeler, image, czemin.width, czemin.height);
+            {##}
+            // golge
+            ctxgolge.clearRect(0, 0, czemin.width, czemin.height);
+            ctxgolge.save();
+            ctxgolge.drawImage(golge, -1, 2);
+            ctxgolge.restore();
+        }
+
+        function drawRotated(ctx, degrees, maske, img, width, height, transformx = 0, transformy = 0){
+            ctx.clearRect(0, 0, width, height);
+            ctx.save();
+
+            ctx.drawImage(maske, 0, 0);
+            ctx.setTransform(1, 0, 0, 1, transformx, transformy);
+            ctx.globalCompositeOperation="source-in";
+            var pattern = ctx.createPattern(img, "repeat");
+            pattern.setTransform(matrix.rotate(degrees).scale(1));
+            ctx.fillStyle = pattern;
+            ctx.fillRect(0, 0, width, height);
+            ctx.restore();
+        }
+
+        function drawPat(ctx, degrees, maske, img, width, height){
+            ctx.clearRect(0, 0, width, height);
+            ctx.save();
+
+            ctx.drawImage(maske, 0,0);
+            ctx.setTransform(1,0,0,1,10,-10);
+            ctx.globalCompositeOperation="source-in";
+            //pattern.setTransform(matrix.rotate(degrees).scale(1));
+            ctx.fillStyle = ctx.createPattern(img, "repeat");
+            ctx.fillRect(30, 30, width-30, height+10);
+            ctx.restore();
+        }
+
+        $(".pattern").click(function(){
+            //alert(this.id);
+            image = document.getElementById(this.id);
+
+            start();
+        });
+
+        var yenile = function () {
+            var url = $('#images_list').attr('data-images-url');
+            console.log("yenile");
+
+            $.ajax({
+               url:url,
+               success: function (data) {
+                   $('#images_list').html(data.image_list);
+               }
+            });
+
+        };
+
+        $('#images_list').on('click', '.pattern', function (){
+            {#var image_src = $(this).attr('src');#}
+            {#console.log(image_src);#}
+            {#image.attr('src',image_src);#}
+            image = document.getElementById(this.id);
+            start();
+        });
+
+        $('.container').on('click', '.delete-img', function (){
+            console.log("silme yeri");
+            var url = $('#images_list').attr('delete-image-url');
+            var image_name = $(this).attr('id');
+
+            $.ajax({
+                url:url,
+                data: {
+                    'image_name': image_name
+                },
+                success: function (data) {
+                    if(data.response){
+                        console.log("başarıyla silindi");
+                        $('#yenile').click();
+                    }
+                    else{
+                        console.log("wrong");
+                    }
+                }
+            });
+        });
+
+        $('#yenile').click(yenile);
+        yenile();
+    });
+
+</script>
+{% endblock %}
