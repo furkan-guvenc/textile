@@ -1,14 +1,56 @@
 from django.shortcuts import render, redirect
-from textile.settings import BASE_DIR
+from textile.settings import BASE_DIR, MEDIA_ROOT, MEDIA_URL, STATIC_URL
 from django.http import JsonResponse
 from django.core.files.storage import FileSystemStorage
 
 import os
 
+from mockup import dominant_color
+
 
 def index(request):
     return render(request, 'mockups.html')
     # return render(request, 'gomlek.html')
+
+
+def upload_image_page(request):
+    files = os.listdir(MEDIA_ROOT)
+    if len(files):
+        for file in files:
+            os.remove(os.path.join(MEDIA_ROOT, file))
+    if request.method == 'POST' and request.FILES['myfile']:
+        try:
+            myfile = request.FILES['myfile']
+            fs = FileSystemStorage()
+            filename = fs.save(myfile.name, myfile)
+        except Exception as e:
+            print("Hata: ", e)
+        else:
+            print("Successful ")
+            # return render(request, 'dominant_color.html', {'file_name': myfile.name})
+            return redirect('dominant_color',)
+    return render(request, 'upload_image.html')
+
+
+def dominant_color_page(request):
+
+    try:
+        files = os.listdir(MEDIA_ROOT)
+        filename = files[0]
+
+        image_with_abs_path = os.path.join(MEDIA_ROOT, filename)
+        image_with_rel_path = os.path.join(MEDIA_URL, filename)
+
+        # images_count = len(files)
+
+        colors = dominant_color.get_dominant_colors(image_with_abs_path)
+
+        # return render(request, 'dominant_color.html', {'images': images_with_path, 'images_count': images_count})
+
+    except Exception as e:
+        print("Hata: ", e)
+    else:
+        return render(request, 'dominant_color.html', {'colors': colors, 'file': image_with_rel_path})
 
 
 def load_images(request):
@@ -28,7 +70,7 @@ def load_images(request):
     for image in images:
         image_name, extension = image.split(".")
         if extension == "png" or extension == "jpg" or extension == "jpeg":
-            image_list += string.format(os.path.join(path, image),image, image)
+            image_list += string.format(os.path.join(path, image), image, image)
 
     data = {
         'image_list': image_list,
@@ -37,7 +79,6 @@ def load_images(request):
 
 
 def delete_image(request):
-
     try:
         image_name = request.GET.get('image_name')
         image_path = os.path.join(BASE_DIR, 'static', 'images', 'pattern', image_name)
@@ -58,7 +99,7 @@ def upload_pattern(request):
         fs = FileSystemStorage()
         filename = fs.save(myfile.name, myfile)
 
-        pattern_path = os.path.join(BASE_DIR,'media', filename)
+        pattern_path = os.path.join(BASE_DIR, 'media', filename)
         patterns_path = os.path.join(BASE_DIR, 'static', 'images', 'pattern', myfile.name)
 
         print(pattern_path)

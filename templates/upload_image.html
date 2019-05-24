@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}UPLOAD IMAGE{% endblock %}
+{% block javascript %}
+<script>
+$('input[type="file"]').imageuploadify();
+</script>
+{% endblock %}
+{% block body %}
+<form method="post" enctype="multipart/form-data" action="{% url 'upload_image' %}">
+{% csrf_token %}
+    <input type="file" name="myfile" accept=".xlsx,.xls,image/*,.doc,audio/*,.docx,video/*,.ppt,.pptx,.txt,.pdf" multiple="" style="display: none;">
+{#    <div class="imageuploadify well" style="border-color: rgb(210, 210, 210);">#}
+{#        <div class="imageuploadify-overlay" style="display: none;"><i class="fa fa-picture-o"></i></div>#}
+{#        <div class="imageuploadify-images-list text-center" style="pointer-events: initial;">#}
+{#            <i class="fa fa-cloud-upload" style="pointer-events: initial;"></i><span class="imageuploadify-message" style="pointer-events: initial;">Drag&amp;Drop Your File(s)Here To Upload</span>#}
+{#            <button type="button" class="btn btn-default" style="background: white none repeat scroll 0% 0%; color: rgb(58, 160, 255); pointer-events: initial;">or select file to upload</button>#}
+{#        </div>#}
+{#    </div>#}
+<button type="submit" style="margin: auto;display: block">Kaydet</button>
+</form>
+{% endblock %}

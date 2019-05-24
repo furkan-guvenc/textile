@@ -16,12 +16,18 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+from django.conf import settings
+from django.conf.urls.static import static
+
 from mockup import views
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.index, name='index'),
+    path('index', views.index, name='index'),
     path('upload_pattern', views.upload_pattern, name='upload_pattern'),
     path('load_images', views.load_images, name='load_images'),  # ajax
     path('delete_image', views.delete_image, name='delete_image'),  # ajax
-]
+    path('', views.upload_image_page, name='upload_image'),
+    path('dominant_color', views.dominant_color_page, name='dominant_color'),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

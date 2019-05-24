@@ -4,29 +4,10 @@
 {% block body %}
 
 <img src="{% static 'images/desen1.jpg' %}" style="display: none" id="desen" class="pattern" width="50">
-{#<img src="{% static 'images/pattern/desen2.jpg' %}" id="desen1" class="pattern" width="50">#}
-{#<img src="{% static 'images/pattern/desen001.jpg' %}" id="desen001" class="pattern" width="50">#}
-{#<img src="{% static 'images/pattern/desen002.jpg' %}" id="desen002" class="pattern" width="50">#}
-{#<img src="{% static 'images/pattern/desen003.jpg' %}" id="desen003" class="pattern" width="50">#}
-{#<img src="{% static 'images/pattern/desen004.jpg' %}" id="desen004" class="pattern" width="50">#}
-{#<img src="{% static 'images/pattern/desen005.jpg' %}" id="desen005" class="pattern" width="50">#}
-{#<img src="{% static 'images/pattern/desen006.jpg' %}" id="desen006" class="pattern" width="50">#}
-{#<img src="{% static 'images/pattern/desen007.jpg' %}" id="desen007" class="pattern" width="50">#}
-{#<img src="{% static 'images/pattern/desen008.jpg' %}" id="desen008" class="pattern" width="50">#}
-{#<img src="{% static 'images/pattern/desen009.jpg' %}" id="desen009" class="pattern" width="50">#}
-{#<img src="{% static 'images/uzunkol/hamyaka.tif' %}" id="desen009" class="pattern" width="50">#}
 
 <div id="container" class="container">
     <div class="row">
-        <div class="col-md-9" id="canvass">
-{#            <canvas id="czemin" width=500 height=600></canvas>#}
-{#            <canvas id="cbeden" width=500 height=600></canvas>#}
-{#            <canvas id="caltmanset" width=500 height=600></canvas>#}
-{#            <canvas id="custmanset" width=500 height=600></canvas>#}
-{#            <canvas id="conpat" width=500 height=600></canvas>#}
-{#            <canvas id="csagyaka" width=500 height=600></canvas>#}
-{#            <canvas id="csolyaka" width=500 height=600></canvas>#}
-{#            <canvas id="cgolge" width=500 height=600></canvas>#}
+        <div class="col-12 col-md-9" id="canvass" style="width: 500px; height: 500px; margin-bottom: 100px">
 
             <canvas id="czemin" width=500 height=595></canvas>
             <canvas id="cbeden" width=500 height=595></canvas>
@@ -40,7 +21,7 @@
             <canvas id="csagbilek" width=500 height=595></canvas>
             <svg id="svg1" style="display:none"></svg>
         </div>
-        <div class="col-md-3" >
+        <div class="col-12 col-md-3" >
           <div class="row">
               <h4 class="d-flex justify-content-between align-items-center">
             <span class="text-muted">Desenler</span>
@@ -162,7 +143,7 @@ $(function(){
             {#ctxzemin.restore();#}
 
             drawRotated(ctxbeden, 0, beden, image, czemin.width, czemin.height); // beden
-            drawRotated(ctxsagyaka, 90, ense, image, czemin.width, czemin.height); // beden
+            drawRotated(ctxsagyaka, 0, ense, image, czemin.width, czemin.height); // beden
             drawRotated(ctxsolyaka, 180, yaka, image, czemin.width, czemin.height); // beden
             {#drawRotated(ctxaltmanset, 90, altmanset, image, czemin.width, czemin.height); // alt manşet#}
             {#drawRotated(ctxustmanset, 90, ustmanset, image, czemin.width, czemin.height); // üst manşet#}

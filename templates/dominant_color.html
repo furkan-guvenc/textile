@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}DOMINANT COLOR{% endblock %}
+{% block javascript %}
+
+{% endblock %}
+{% block body %}
+
+    <style>
+        .my-button {
+            margin-left: 5px;
+            margin-right: 5px;
+            color: white;
+        }
+    </style>
+
+<div id="container" class="container">
+    <div class="row">
+        <div class="col-12 col-md-8">
+            <img src="{{ file }}" class="img-fluid" alt="Responsive image" style="height: 500px">
+        </div>
+    </div>
+    <div class="row">
+        <form>
+{#            <div class="form-inline">#}
+{#                <div class="form-group">#}
+{#                    <label for="email">1-) Değiştirilecek renk: </label>#}
+{#                    <button class="form-control my-button" style="background-color: #dc3545;" disabled> #dc3545</button>#}
+{#                  </div>#}
+{#                  <div class="form-group">#}
+{#                    <label for="pwd">Getirilecek renk: </label>#}
+{#                    <input type="color1" class="jscolor" id="pwd" value="99cc00">#}
+{#                  </div>#}
+{#            </div>#}
+
+            {% for color in colors %}
+            <div class="form-inline">
+                <div class="form-group">
+                    <label for="email">1-) Değiştirilecek renk: </label>
+                    <button class="form-control my-button" style="background-color: {{ color }};" disabled> {{ color }}</button>
+                  </div>
+                  <div class="form-group">
+                    <label for="pwd">Getirilecek renk: </label>
+                    <input type="color1" class="jscolor" id="pwd" value="99cc00">
+                  </div>
+            </div>
+            {% endfor %}
+
+
+
+        </form>
+
+
+
+{#        Değiştirilecek renk:#}
+{#        <button style="background-color: #dc3545; margin-left: 5px; margin-right: 5px; color: white;" disabled> #dc3545</button>#}
+{#        <div>Getirilecek renk: <input name="color1" class="jscolor" value="99cc00"></div>#}
+
+    </div>
+</div>
+{% endblock %}
