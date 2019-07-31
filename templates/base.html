@@ -16,12 +16,14 @@
 {#    <script src="{% static 'js/dropzone.js' %}"></script>#}
     <script src="{% static 'js/imageuploadify.js' %}"></script>
   <link href="{% static 'css/imageuploadify.min.css' %}" rel="stylesheet"><br>
+
   </head>
   <body>
+
       {% block body %}
       {% endblock %}
-
-    {% block javascript %}
+        {% block javascript %}
     {% endblock %}
+
   </body>
 </html>

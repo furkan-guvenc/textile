@@ -1,0 +1,207 @@
+{% extends 'base.html' %}
+{% load mockup_extras %}
+{% load static %}
+{% block title %}KATMANLAR{% endblock %}
+{% block javascript %}
+    <script src="{% static 'js/hsvToRgb.js' %}" type="text/javascript"></script>
+    <script>
+    var image_width = {{ width }};
+    var image_height = {{ height }};
+
+    var colored_image = {{ hue_number }};
+    var colorless_image = {{ val_number }};
+    var image_number = colored_image + colorless_image;
+
+    var canvass = [];
+    var ctxs = [];
+    var temp_canvass = [];
+    var temp_ctxs = [];
+    for (let i = 0; i < image_number; i++) {
+        console.log("canvas"+i);
+        canvass[i] = document.getElementById("canvas" + i);
+        ctxs[i] = canvass[i].getContext("2d");
+    }
+
+
+    var imageURLs=[];
+    var imagesOK=0;
+    var imgs=[];
+
+
+    {% for hue_image in hue_image_list %}
+        imageURLs.push("{{ hue_image }}");
+    {% endfor %}
+
+    {% for val_image in val_image_list %}
+        imageURLs.push("{{ val_image }}");
+    {% endfor %}
+
+
+    loadAllImages();
+
+    function loadAllImages(){
+            for (let i = 0; i < imageURLs.length; i++) {
+                var img = new Image();
+                imgs.push(img);
+                img.onload = function(){ imagesOK++; imagesAllLoaded(); };
+                img.src = imageURLs[i];
+            }
+        }
+
+    var imagesAllLoaded = function() {
+            if (imagesOK===imageURLs.length ) {
+                start();
+            }
+        };
+
+    var start = function(){
+        for (let i = 0; i < image_number; i++) {
+            draw(ctxs[i], imgs[i], image_width, image_height);
+        }
+
+        };
+
+    var draw = function (ctx, desen, width, height) {
+        ctx.clearRect(0, 0, width, height);
+        ctx.save();
+        ctx.drawImage(desen, 0, 0, {{ width }}, {{ height }}, 0, 0, 500, 500);
+    };
+
+    for (let i = 0; i < colorless_image; i++) {
+        temp_canvass[i] = document.createElement('canvas');
+        temp_ctxs[i] = temp_canvass[i].getContext('2d');
+        temp_canvass[i].width = image_width;
+        temp_canvass[i].height = image_height;
+        temp_ctxs[i].drawImage(imgs[i+colored_image], 0, 0, {{ width }}, {{ height }}, 0, 0, 500, 500);
+    }
+
+
+    function change_hue(index) {
+        let image_hsv, image_rgb;
+        const hue = document.getElementById("Hue" + index).value;
+        console.log("Hue"+index+": "+hue);
+        let imageData = ctxs[index].getImageData(0, 0, image_width, image_height); // seç
+        for (let i = 0; i < imageData.data.length; i+=4) {
+            if(imageData.data[i+3] === 255){
+                image_hsv = rgb2hsv(imageData.data[i],imageData.data[i+1],imageData.data[i+2]);
+                image_hsv[0] = hue;
+                image_rgb = hsv2rgb(image_hsv[0],image_hsv[1],image_hsv[2]);
+                imageData.data[i] = image_rgb[0];
+                imageData.data[i+1] = image_rgb[1];
+                imageData.data[i+2] = image_rgb[2];
+            }
+
+        }
+        ctxs[index].putImageData(imageData,0,0);
+    }
+
+    function change_sat(index) {
+        let image_hsv, image_rgb;
+        let sat = document.getElementById("Sat" + index).value;
+        console.log("Sat"+index+": "+sat);
+        let imageData = ctxs[index].getImageData(0, 0, image_width, image_height); // seç
+        let originalimageData = temp_ctxs[index - colored_image].getImageData(0, 0, image_width, image_height); // seç
+        for (let i = 0; i < imageData.data.length; i+=4) {
+            if(imageData.data[i+3] === 255) {
+                image_hsv = rgb2hsv(imageData.data[i],imageData.data[i+1],imageData.data[i+2]);
+                image_hsv[1] += sat;
+                image_rgb = hsv2rgb(image_hsv[0],image_hsv[1],image_hsv[2]);
+                imageData.data[i] = image_rgb[0];
+                imageData.data[i+1] = image_rgb[1];
+                imageData.data[i+2] = image_rgb[2];
+            }
+        }
+        ctxs[index].putImageData(imageData,0,0);
+    }
+
+    function change_val(index) {
+        let image_hsv, image_rgb;
+        let val = document.getElementById("Val" + index).value;
+        console.log("Val"+index+": "+val);
+        let imageData = ctxs[index].getImageData(0, 0, image_width, image_height); // seç
+        let originalimageData = temp_ctxs[index - colored_image].getImageData(0, 0, image_width, image_height); // seç
+        for (let i = 0; i < imageData.data.length; i+=4) {
+            if(imageData.data[i+3] === 255) {
+                image_hsv = rgb2hsv(originalimageData.data[i],originalimageData.data[i+1],originalimageData.data[i+2]);
+                image_hsv[2] += val;
+                image_rgb = hsv2rgb(image_hsv[0],image_hsv[1],image_hsv[2]);
+                imageData.data[i] = image_rgb[0];
+                imageData.data[i+1] = image_rgb[1];
+                imageData.data[i+2] = image_rgb[2];
+            }
+        }
+        ctxs[index].putImageData(imageData,0,0);
+    }
+
+
+
+    function convertHex(hex){
+        hex = hex.replace('#','');
+        var r = parseInt(hex.substring(0, 2), 16);
+        var g = parseInt(hex.substring(2, 4), 16);
+        var b = parseInt(hex.substring(4, 6), 16);
+
+        return [r,g,b];
+    }
+
+</script>
+{% endblock %}
+{% block body %}
+<style>
+        canvas {
+            position: absolute;
+        }
+
+</style>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col">
+                {% for i in total_number|filter_range %}
+                    <canvas id="canvas{{ i }}" width="500" height="500" class="mycanvas"></canvas>
+                {% endfor %}
+            </div>
+            <div class="col">
+                <form>
+                    <div class="form-group row">
+                        {% for hue in hue_number|filter_range %}
+                            <div class="col">
+                                <div class="form-group text-center">
+                                    <label for="Hue{{ forloop.counter0 }}">Hue{{ forloop.counter0 }}</label>
+                                    <input type="range" name="Hue{{ forloop.counter0 }}" id="Hue{{ forloop.counter0 }}"
+                                           class="form-control" placeholder="50" min="0" max="360" onchange="change_hue({{ forloop.counter0 }})">
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    {% for val in val_number|filter_range %}
+                        <div class="form-group row">
+                            <div class="col">
+                            <div class="form-group text-center">
+                                <label for="Hue{{ forloop.counter0|add:hue_number }}">Hue{{ forloop.counter0|add:hue_number  }}</label>
+                                <input type="range" name="Hue{{ forloop.counter0|add:hue_number  }}" id="Hue{{ forloop.counter0|add:hue_number}}"
+                                       class="form-control" placeholder="50" min="0" max="360" onchange="change_hue({{ forloop.counter0|add:hue_number }})">
+                            </div>
+                        </div>
+                            <div class="col">
+                                <div class="form-group text-center">
+                                    <label for="Sat{{ forloop.counter0|add:hue_number }}">Sat{{ forloop.counter0|add:hue_number  }}</label>
+                                    <input type="range" name="Sat{{ forloop.counter0|add:hue_number  }}" id="Sat{{ forloop.counter0|add:hue_number}}"
+                                           class="form-control" placeholder="50" min="-100" max="100" onchange="change_sat({{ forloop.counter0|add:hue_number }})">
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-group text-center">
+                                    <label for="Val{{ forloop.counter0|add:hue_number }}">Val{{ forloop.counter0|add:hue_number  }}</label>
+                                    <input type="range" name="Val{{ forloop.counter0|add:hue_number  }}" id="Val{{ forloop.counter0|add:hue_number}}"
+                                           class="form-control" placeholder="50" min="-100" max="100" onchange="change_val({{ forloop.counter0|add:hue_number }})">
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

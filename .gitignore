@@ -1,0 +1,12 @@
+venv/
+.idea/
+__pycache__/
+inputs/
+db.sqlite3
+.git
+deneme.py
+hebe.txt
+media/desen.jpg
+package-lock.json
+static/layers/*
+static/images/*

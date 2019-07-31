@@ -1,16 +1,33 @@
-from django.shortcuts import render, redirect
-from textile.settings import BASE_DIR, MEDIA_ROOT, MEDIA_URL, STATIC_URL
+from django.shortcuts import render, redirect, HttpResponse
+from textile.settings import BASE_DIR, MEDIA_ROOT, MEDIA_URL
 from django.http import JsonResponse
 from django.core.files.storage import FileSystemStorage
 
-import os
+import os, json
 
 from mockup import dominant_color
+from mockup import read_image_from_db
 
 
 def index(request):
     return render(request, 'mockups.html')
     # return render(request, 'gomlek.html')
+
+
+def show_layers(request, image_name):
+    image_path = os.path.join(BASE_DIR, 'static', 'layers', image_name, 'image.json')
+    if os.path.isfile(image_path):
+        with open(image_path, "r") as read_file:
+            context = json.load(read_file)
+        return render(request, 'show_layers.html', context)
+    else:
+        response = read_image_from_db.read_image_from_db(image_name)
+        if response == "True":
+            with open(image_path, "r") as read_file:
+                context = json.load(read_file)
+            return render(request, 'show_layers.html', context)
+        else:
+            return HttpResponse(response)
 
 
 def upload_image_page(request):
@@ -28,14 +45,15 @@ def upload_image_page(request):
         else:
             print("Successful ")
             # return render(request, 'dominant_color.html', {'file_name': myfile.name})
-            return redirect('dominant_color',)
+            return redirect('dominant_color', )
     return render(request, 'upload_image.html')
 
 
 def dominant_color_page(request):
-
     try:
         files = os.listdir(MEDIA_ROOT)
+        if len(files) == 0:
+            return HttpResponse("İlk önce fotoğraf yükleyin.")
         filename = files[0]
 
         image_with_abs_path = os.path.join(MEDIA_ROOT, filename)
