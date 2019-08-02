@@ -3,7 +3,7 @@ venv/
 __pycache__/
 inputs/
 db.sqlite3
-.git
+.git/
 deneme.py
 hebe.txt
 media/desen.jpg

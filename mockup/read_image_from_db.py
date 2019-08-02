@@ -28,8 +28,13 @@ def read_image_from_db(image_name):
 
         image_ext = ".png"
         image_full_name = image_name + image_ext
+
+        layer_folder = os.path.join('static', 'layers')
         static_folder = os.path.join('static', 'layers', image_name)
         output_folder = os.path.join(BASE_DIR, 'static', 'layers', image_name)
+
+        if not os.path.exists(layer_folder):
+            os.mkdir(layer_folder)
         if not os.path.exists(output_folder):
             os.mkdir(output_folder)
         print("Folder is established")
@@ -132,11 +137,13 @@ def read_image_from_db(image_name):
             if i < hue_clusters_number:
                 path = os.path.join(output_folder, 'hue_{}.png'.format(i))
                 static_path = os.path.join(static_folder, 'hue_{}.png'.format(i))
+                static_path = static_path.replace('\\', '/')
                 json_dict['hue_image_list'].append(static_path)
                 cv2.imwrite(path, image)
             else:
                 path = os.path.join(output_folder, 'val_{}.png'.format(i - hue_clusters_number))
                 static_path = os.path.join(static_folder, 'val_{}.png'.format(i - hue_clusters_number))
+                static_path = static_path.replace('\\', '/')
                 json_dict['val_image_list'].append(static_path)
                 cv2.imwrite(path, image)
 

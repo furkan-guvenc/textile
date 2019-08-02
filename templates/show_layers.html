@@ -29,11 +29,11 @@
 
 
     {% for hue_image in hue_image_list %}
-        imageURLs.push("{{ hue_image }}");
+        imageURLs.push("/{{ hue_image }}");
     {% endfor %}
 
     {% for val_image in val_image_list %}
-        imageURLs.push("{{ val_image }}");
+        imageURLs.push("/{{ val_image }}");
     {% endfor %}
 
 
