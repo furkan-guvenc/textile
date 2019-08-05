@@ -27,11 +27,10 @@ def read_image_from_db(image_name):
         VAL_LIMIT = 25
 
         image_ext = ".png"
-        image_full_name = image_name + image_ext
 
-        layer_folder = os.path.join('static', 'layers')
+        layer_folder = os.path.join(BASE_DIR, 'static', 'layers')
         static_folder = os.path.join('static', 'layers', image_name)
-        output_folder = os.path.join(BASE_DIR, 'static', 'layers', image_name)
+        output_folder = os.path.join(layer_folder, image_name)
 
         if not os.path.exists(layer_folder):
             os.mkdir(layer_folder)
@@ -40,8 +39,12 @@ def read_image_from_db(image_name):
         print("Folder is established")
 
         cursor_raw = connection.cursor(raw=True)
+        print("Image is reading")
         cursor_raw.execute("""SELECT desen_blob FROM furkanguvenc WHERE (desen= '{}')""".format(image_name))
         desen = cursor_raw.fetchone()[0]
+        cursor_raw.close()
+        connection.close()
+        print("Image is in buffer")
         img = cv2.imdecode(np.frombuffer(desen, np.uint8), -1)
         print("Image is set up")
 
