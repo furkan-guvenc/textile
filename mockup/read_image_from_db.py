@@ -40,7 +40,7 @@ def read_image_from_db(image_name):
 
         cursor_raw = connection.cursor(raw=True)
         print("Image is reading")
-        cursor_raw.execute("""SELECT desen_blob FROM furkanguvenc WHERE (desen= '{}')""".format(image_name))
+        cursor_raw.execute("""SELECT desen_blob FROM furkanguvenc WHERE (desen= '{}')""".format(image_name)) #'328102-1'
         desen = cursor_raw.fetchone()[0]
         cursor_raw.close()
         connection.close()
