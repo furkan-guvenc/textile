@@ -23,8 +23,10 @@ from mockup import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('index', views.index, name='index'),
-    path('upload_pattern', views.upload_pattern, name='upload_pattern'),
+    path('login/', views.login_page, name='login'),
+    path('logout/', views.logout_, name='logout'),
+    path('index/', views.index, name='index'),
+    path('upload_pattern/', views.upload_pattern, name='upload_pattern'),
     path('load_images', views.load_images, name='load_images'),  # ajax
     path('delete_image', views.delete_image, name='delete_image'),  # ajax
     path('show_layers/<str:image_name>/', views.show_layers, name='show_layers'),

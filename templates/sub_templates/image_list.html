@@ -1,0 +1,13 @@
+{% for image_name, abs_path in images %}
+
+    <li class="list-group-item d-flex justify-content-between lh-condensed">
+      <div>
+        <img src="/{{ abs_path }}" height="70" width="70" class="pattern"  id="pattern_{{ image_name }}">
+
+      </div>
+      <button type="button" class="delete-img btn btn-default" id="{{ image_name }}">
+        <span class="input-group-text"><i class="fa fa-trash-alt"></i></span>
+      </button>
+      </li>
+
+{% endfor %}

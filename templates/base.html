@@ -15,11 +15,13 @@
 
 {#    <script src="{% static 'js/dropzone.js' %}"></script>#}
     <script src="{% static 'js/imageuploadify.js' %}"></script>
-  <link href="{% static 'css/imageuploadify.min.css' %}" rel="stylesheet"><br>
+  <link href="{% static 'css/imageuploadify.min.css' %}" rel="stylesheet">
 
   </head>
   <body>
-
+    {% if request.user.is_authenticated %}
+        {% include 'sub_templates/navbar.html' %}
+    {% endif %}
       {% block body %}
       {% endblock %}
         {% block javascript %}

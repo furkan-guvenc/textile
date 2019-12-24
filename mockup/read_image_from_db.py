@@ -21,7 +21,7 @@ def read_image_from_db(image_name):
 
         hue_clusters_number = 4
         value_clusters_number = 4
-        SAT_LIMIT = 39  # it determines how many pixel are colored and not
+        SAT_LIMIT = 25  # it determines how many pixel are colored and not
         CONTOUR_AREA_LIMIT = 1000  # If biggest contour area is lower than limit, eliminate
         HUE_LIMIT = 25
         VAL_LIMIT = 25
