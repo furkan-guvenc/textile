@@ -25,7 +25,7 @@ SECRET_KEY = '$yp314(@y$qsw2c$t_(4e$eu1fa&xj$(loq#r^!($npsdj3p+b'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['furkanguvenc.pythonanywhere.com', '127.0.0.1', '185.82.253.155']
+ALLOWED_HOSTS = ['dortrenk.herokuapp.com', '127.0.0.1', '185.82.253.155']
 
 
 # Application definition
