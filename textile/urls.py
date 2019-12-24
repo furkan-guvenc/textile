@@ -33,6 +33,3 @@ urlpatterns = [
     path('upload_image', views.upload_image_page, name='upload_image'),
     path('dominant_color', views.dominant_color_page, name='dominant_color'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
-from heroku_init import init
-init()
