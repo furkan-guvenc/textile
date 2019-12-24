@@ -23,7 +23,7 @@ from mockup import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('login/', views.login_page, name='login'),
+    path('', views.login_page, name='login'),
     path('logout/', views.logout_, name='logout'),
     path('index/', views.index, name='index'),
     path('upload_pattern/', views.upload_pattern, name='upload_pattern'),

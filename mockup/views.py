@@ -5,6 +5,7 @@ from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, HttpResponse
+from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.template.loader import render_to_string
@@ -23,6 +24,13 @@ def login_page(request):
             if user:
                 login(request, user)
                 return redirect('index')
+            else:
+                messages.add_message(request, level=messages.ERROR, message="Kullanıcı adı veya şifre yanlış.",
+                                     extra_tags='danger')
+                return redirect('login')
+        else:
+            messages.warning(request, "Kullanıcı adı veya şifre düzgün girilmedi.")
+            return redirect('login')
     if request.method == 'GET':
         if request.user.is_authenticated:
             return redirect('index')
