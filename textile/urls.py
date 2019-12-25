@@ -32,4 +32,5 @@ urlpatterns = [
     path('show_layers/<str:image_name>/', views.show_layers, name='show_layers'),
     path('upload_image', views.upload_image_page, name='upload_image'),
     path('dominant_color', views.dominant_color_page, name='dominant_color'),
+    path('add_admin_first/', views.add_admin_first, name='add_admin_first'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

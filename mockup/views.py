@@ -7,6 +7,7 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect, HttpResponse
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.template.loader import render_to_string
 
@@ -175,3 +176,10 @@ def upload_pattern(request):
     else:
         return redirect('index')
     # return render(request, 'core/simple_upload.html')
+
+
+def add_admin_first(request):   # After deploy login this page to add initial admin user
+    if not authenticate(username='admin', password='adminpw'):
+        admin = User.objects.create_superuser(username='admin', password='adminpw', email='admin@admin.com')
+        admin.save()
+    return redirect('login')
