@@ -69,6 +69,7 @@ def show_layers(request, image_name):
 
 @login_required
 def upload_image_page(request):
+    os.makedirs(settings.MEDIA_ROOT, exist_ok=True)
     files = os.listdir(settings.MEDIA_ROOT)
     if len(files):
         for file in files:
