@@ -3,7 +3,7 @@
 
 {% block body %}
 
-<img src="{% static 'images/desen1.jpg' %}" style="display: none" id="desen" class="pattern" width="50">
+<img src="{% static 'images/pattern/desen1.jpg' %}" style="display: none" id="desen" class="pattern" width="50">
 
 <div id="container" class="container">
     <div class="row">
@@ -51,7 +51,11 @@ $(function(){
         var sagbeden,solbeden,beden,kollar,yaka,dugmeler,ense,solbilek,sagbilek,golge;
         {#var arka,golge,beden,altmanset,ustmanset,onpat,sagyaka,solyaka;#}
 
+        {#var image = document.createElement('img');#}
+        {#image.setAttribute('id', 'desen');#}
+        {#image.setAttribute('width', '50');#}
         var image = document.getElementById('desen');
+
         var svg1 = document.getElementById('svg1');
         var matrix = svg1.createSVGMatrix();
 
