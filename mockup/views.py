@@ -116,7 +116,7 @@ def load_images(request):
     image_list = ""
     string = """<li class="list-group-item d-flex justify-content-between lh-condensed">
               <div>
-                <img src="\{}" height="70" width="70" class="pattern"  id="pattern_{}">
+                <img src="/{}" height="70" width="70" class="pattern"  id="pattern_{}">
 
               </div>
               <button type="button" class="delete-img btn btn-default" id="{}">
@@ -124,9 +124,10 @@ def load_images(request):
               </button>
               </li>
               """
-    path = os.path.join('static', 'images', 'pattern')
-    images = os.listdir(path)
-    abs_images = [os.path.join(path, image).replace('\\', '/') for image in images]
+    rel_path = os.path.join('static', 'images', 'pattern')
+    abs_path = os.path.join(settings.BASE_DIR, rel_path)
+    images = os.listdir(abs_path)
+    abs_images = [os.path.join(rel_path, image).replace('\\', '/') for image in images]
     all_images = zip(images, abs_images)
     # for image in images:
     #     image_name, extension = image.rsplit(".", maxsplit=1)
@@ -179,7 +180,7 @@ def upload_pattern(request):
     # return render(request, 'core/simple_upload.html')
 
 
-def add_admin_first(request):   # After deploy login this page to add initial admin user
+def add_admin_first(request):  # After deploy login this page to add initial admin user
     if not authenticate(username='admin', password='adminpw'):
         admin = User.objects.create_superuser(username='admin', password='adminpw', email='admin@admin.com')
         admin.save()
