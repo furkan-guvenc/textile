@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block title %}EXTRACT{% endblock %}
+
+{% block body %}
+
+
+    <div class="container">
+    <div class="row">
+        <div class="col">
+            <form method="post" action="{% url 'show_layers' %}" enctype="multipart/form-data">{% csrf_token %}
+                <h3>Desen Yükleyiniz</h3>
+                <hr>
+                <br>
+    <div class="form-group">
+        <label for="desen_file"> Desen yükleyiniz:
+            <input type="file" name="desen_file" id="desen_file" placeholder="Desen yükeyiniz" class="form-control-file"
+                   aria-describedby="fileHelpId">
+            <span class="custom-file-control"></span>
+        </label>
+        <small id="fileHelpId" class="form-text text-muted">PNG, JPG, JPEG halinde desenler yükleyebilirsiniz</small>
+    </div>
+    <button type="submit" class="btn btn-primary">Deseni yükle</button>
+
+    </form>
+        </div>
+        <div class="col">
+            <h3>Veri tabanından çekiniz</h3>
+            <hr>
+            <br>
+
+            <form method="post" action="{% url 'show_layers' %}">{% csrf_token %}
+                <div class="form-group">
+                    <label for="desen_id">Desen id:</label>
+                    <input type="text" class="form-control" name="desen_id" id="desen_id" aria-describedby="helpId" value="328102-1">
+                </div>
+                <button type="submit" class="btn btn-primary">Veritabanından çek</button>
+            </form>
+        </div>
+    </div>
+    </div>
+
+{% endblock %}

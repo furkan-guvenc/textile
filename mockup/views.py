@@ -12,7 +12,7 @@ from django.contrib.auth.decorators import login_required
 from django.template.loader import render_to_string
 
 from mockup import dominant_color
-from mockup import read_image_from_db
+from mockup import read_image_from_db, read_image_local
 
 from .forms import LoginForm
 
@@ -51,29 +51,46 @@ def index(request):
 
 
 @login_required
-def show_layers(request, image_name):
-    image_path = os.path.join(settings.BASE_DIR, 'static', 'layers', image_name, 'image.json')
-    if os.path.isfile(image_path):
-        with open(image_path, "r") as read_file:
-            context = json.load(read_file)
-        return render(request, 'show_layers.html', context)
-    else:
-        response = read_image_from_db.read_image_from_db(image_name)
-        if response == "True":
-            with open(image_path, "r") as read_file:
-                context = json.load(read_file)
-            return render(request, 'show_layers.html', context)
+def extract(request):
+    return render(request, 'extract.html')
+
+
+@login_required
+def show_layers(request):
+    if request.method == 'POST':
+        if 'desen_id' in request.POST:
+            image_name = request.POST['desen_id']
+            image_path = os.path.join(settings.BASE_DIR, 'static', 'layers', image_name, 'image.json')
+            if os.path.isfile(image_path):
+                with open(image_path, "r") as read_file:
+                    context = json.load(read_file)
+                return render(request, 'show_layers.html', context)
+            else:
+                response = read_image_from_db.read_image_from_db(image_name)
+                if response == "True":
+                    with open(image_path, "r") as read_file:
+                        context = json.load(read_file)
+                    return render(request, 'show_layers.html', context)
+                else:
+                    return HttpResponse(response)
         else:
-            return HttpResponse(response)
+            check_media_remove_if_exists()
+            image_path = os.path.join(settings.BASE_DIR, 'static', 'layers', 'temp', 'image.json')
+            myfile = request.FILES['desen_file']
+            fs = FileSystemStorage()
+            filename = fs.save(myfile.name, myfile)
+            response = read_image_local.read_image_local(filename)
+            if response == "True":
+                with open(image_path, "r") as read_file:
+                    context = json.load(read_file)
+                return render(request, 'show_layers.html', context)
+            else:
+                return HttpResponse(response)
 
 
 @login_required
 def upload_image_page(request):
-    os.makedirs(settings.MEDIA_ROOT, exist_ok=True)
-    files = os.listdir(settings.MEDIA_ROOT)
-    if len(files):
-        for file in files:
-            os.remove(os.path.join(settings.MEDIA_ROOT, file))
+    check_media_remove_if_exists()
     if request.method == 'POST' and request.FILES['myfile']:
         try:
             myfile = request.FILES['myfile']
@@ -185,3 +202,11 @@ def add_admin_first(request):  # After deploy login this page to add initial adm
         admin = User.objects.create_superuser(username='admin', password='adminpw', email='admin@admin.com')
         admin.save()
     return redirect('login')
+
+
+def check_media_remove_if_exists():
+    os.makedirs(settings.MEDIA_ROOT, exist_ok=True)
+    files = os.listdir(settings.MEDIA_ROOT)
+    if len(files):
+        for file in files:
+            os.remove(os.path.join(settings.MEDIA_ROOT, file))
